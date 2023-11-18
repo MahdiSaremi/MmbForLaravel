@@ -1,0 +1,25 @@
+<?php
+
+namespace Mmb\Laravel\Core\Updates\Files;
+
+use Countable;
+use IteratorAggregate;
+use Mmb\Laravel\Core\DataCollection;
+
+/**
+ * @implements IteratorAggregate<int, Photo>
+ */
+class PhotoCollection extends Photo implements Countable, IteratorAggregate
+{
+    use DataCollection;
+
+    protected function getCollectionClassType()
+    {
+        return Photo::class;
+    }
+
+    public function getDefault()
+    {
+        return $this->last();
+    }
+}
