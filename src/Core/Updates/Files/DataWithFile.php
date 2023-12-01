@@ -30,4 +30,24 @@ abstract class DataWithFile extends Data
         ];
     }
 
+    public function getFile()
+    {
+        return $this->bot()->getFile(fileId: $this->id);
+    }
+
+    public function download(string $path)
+    {
+        return $this->getFile()?->download($path);
+    }
+
+    public function downloadToStorage(string $dir, string $name = null)
+    {
+        return $this->getFile()?->downloadToStorage($dir, $name);
+    }
+
+    public function downloadToPublic(string $dir, string $name = null)
+    {
+        return $this->getFile()?->downloadToPublic($dir, $name);
+    }
+
 }

@@ -3,12 +3,15 @@
 namespace Mmb\Laravel\Action\Memory;
 
 use Mmb\Laravel\Action\Memory\Attributes\StepHandlerAttribute;
+use Mmb\Laravel\Core\Updates\Update;
+use Mmb\Laravel\Support\AttributeLoader\HasAttributeLoader;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
 
 class StepHandler
 {
+    use HasAttributeLoader;
 
     public function __construct(
         ?StepMemory $memory = null,
@@ -26,28 +29,6 @@ class StepHandler
     }
 
     /**
-     * Get attributes of property
-     *
-     * @param ReflectionProperty $property
-     * @return ReflectionAttribute[]
-     */
-    protected function getAttributesOf(ReflectionProperty $property)
-    {
-        $attrs = $property->getAttributes();
-        foreach($attrs as $i => $attr)
-        {
-            $attr = $attr->newInstance();
-            if(!($attr instanceof StepHandlerAttribute))
-            {
-                unset($attrs[$i]);
-            }
-            $attrs[$i] = $attr;
-        }
-
-        return $attrs;
-    }
-
-    /**
      * Load data from memory
      *
      * @param StepMemory $memory
@@ -59,7 +40,7 @@ class StepHandler
         foreach($ref->getProperties(ReflectionProperty::IS_PUBLIC) as $property)
         {
             StepHandlerAttribute::load(
-                $this->getAttributesOf($property),
+                static::getPropertyAttributesOf($property->getName(), StepHandlerAttribute::class),
                 $property->getName(),
                 $memory,
                 $this
@@ -79,11 +60,19 @@ class StepHandler
         foreach($ref->getProperties(ReflectionProperty::IS_PUBLIC) as $property)
         {
             StepHandlerAttribute::save(
-                $this->getAttributesOf($property),
+                static::getPropertyAttributesOf($property->getName(), StepHandlerAttribute::class),
                 $property->getName(),
                 $memory,
                 $this
             );
+        }
+
+        foreach($memory as $key => $value)
+        {
+            if($value === null)
+            {
+                $memory->forget($key);
+            }
         }
     }
 
@@ -94,7 +83,17 @@ class StepHandler
      */
     public function keep()
     {
-        // TODO
+        Step::set($this);
+    }
+
+    /**
+     * Handle update
+     *
+     * @param Update $update
+     * @return void
+     */
+    public function handle(Update $update)
+    {
     }
 
 }

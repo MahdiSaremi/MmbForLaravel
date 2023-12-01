@@ -5,6 +5,16 @@ namespace Mmb\Laravel\Core\Updates\Infos;
 use Mmb\Laravel\Core\Data;
 use Mmb\Laravel\Core\Updates\Messages\Message;
 
+/**
+ * @property int $id
+ * @property string $type
+ * @property ?string $title
+ * @property ?string $username
+ * @property ?string $firstName
+ * @property ?string $lastName
+ * @property ?bool $isForum
+ * @property ?string $bio
+ */
 class ChatInfo extends Data
 {
 
@@ -40,6 +50,41 @@ class ChatInfo extends Data
             'linked_chat_id'                          => 'int',
             // 'location'                                => Location::class,
         ];
+    }
+
+    public static function fakePrivate($id = null, ...$args)
+    {
+        return static::make($args + [
+            'id' => $id ?? rand(1, PHP_INT_MAX),
+            'type' => 'private',
+        ]);
+    }
+
+    public function sendMessage($message = null, array $args = [], ...$namedArgs)
+    {
+        $args = $this->mergeMultiple(
+            [
+                'chat' => $this->id,
+                'text' => $message,
+            ],
+            $args + $namedArgs
+        );
+
+        return $this->bot()->sendMessage($args);
+    }
+
+    public function send($type = null, $message = null, array $args = [], ...$namedArgs)
+    {
+        $args = $this->mergeMultiple(
+            [
+                'chat' => $this->id,
+                'type' => $type,
+                'text' => $message,
+            ],
+            $args + $namedArgs
+        );
+
+        return $this->bot()->send($args);
     }
 
 }

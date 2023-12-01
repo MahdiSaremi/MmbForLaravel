@@ -31,6 +31,7 @@ class ComposerStaticInitd97fef742cba97e8911e91b30227cc49
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
+        'd011825e86894dad69e85340d1d9e087' => __DIR__ . '/../..' . '/functions/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -147,10 +148,6 @@ class ComposerStaticInitd97fef742cba97e8911e91b30227cc49
         'B' => 
         array (
             'Brick\\Math\\' => 11,
-        ),
-        'A' => 
-        array (
-            'App\\' => 4,
         ),
     );
 
@@ -433,10 +430,6 @@ class ComposerStaticInitd97fef742cba97e8911e91b30227cc49
         'Brick\\Math\\' => 
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
-        ),
-        'App\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/app',
         ),
     );
 

@@ -32,10 +32,24 @@ class FileInfo extends Data
         ];
     }
 
-    // TODO
     public function getDownloadUrl()
     {
-        return "https://api.telegram.org/file/bot{$this->bot()->token}/{$this->filePath}";
+        return $this->bot()->getFileDownloadUrl($this->filePath);
+    }
+
+    public function download(string $path)
+    {
+        return copy($this->getDownloadUrl(), $path);
+    }
+
+    public function downloadToStorage(string $dir, string $name = null)
+    {
+        return $this->download(storage_path($dir . ($name === null ? '' : '/' . $name)));
+    }
+
+    public function downloadToPublic(string $dir, string $name = null)
+    {
+        return $this->download(public_path($dir . ($name === null ? '' : '/' . $name)));
     }
 
 }

@@ -4,6 +4,7 @@ namespace Mmb\Laravel\Core;
 
 use ArrayAccess;
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Facades\Validator;
@@ -119,7 +120,7 @@ abstract class Data implements Arrayable, Jsonable, ArrayAccess
             }
             elseif(is_object($value))
             {
-                throw new \InvalidArgumentException("Expected [$cast] type casting, given [".get_class($value)."]");
+                throw new \InvalidArgumentException("Expected [$cast] type casting, given [" . get_class($value) . "]");
             }
             elseif(method_exists($cast, 'make'))
             {
@@ -233,6 +234,38 @@ abstract class Data implements Arrayable, Jsonable, ArrayAccess
         $access = $this->getDataShortAccess($name) ?? $name;
 
         $this->$access = $value;
+    }
+
+    protected function mergeMultiple(array $valueArgs, array $fixedArgs)
+    {
+        $args = [];
+        foreach($valueArgs as $key => $value)
+        {
+            if(is_array($value))
+            {
+                $args = $value + $args;
+            }
+            elseif($value !== null)
+            {
+                $args[$key] = $value;
+            }
+        }
+
+        return $fixedArgs + $args;
+    }
+
+    protected $_caches = [];
+
+    /**
+     * @param string  $name
+     * @param Closure $maker
+     * @return mixed
+     */
+    protected function makeCache(string $name, Closure $maker)
+    {
+        return array_key_exists($name, $this->_caches) ?
+            $this->_caches[$name] :
+            $this->_caches[$name] = $maker();
     }
 
 

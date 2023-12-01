@@ -88,19 +88,27 @@ class CallerFactory
         {
             $type = $type->getName();
 
-            if(!($value instanceof $type))
+            // if(!($value instanceof $type))
+            // {
+            //     return $this->castParameter($value, $type);
+            // }
+            foreach($parameter->getAttributes() as $attribute)
             {
-                return $this->castParameter($value, $type);
+                $attribute = $attribute->newInstance();
+                if($attribute instanceof CallingAttribute)
+                {
+                    $value = $attribute->cast($value, $type);
+                }
             }
         }
 
         return $value;
     }
 
-    private function castParameter($value, string $class)
-    {
-        return $value;
-    }
+    // private function castParameter($value, string $class)
+    // {
+    //     return $value;
+    // }
 
 
     private function getGlobalInstanceOf(

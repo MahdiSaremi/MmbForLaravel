@@ -12,11 +12,25 @@ trait HasRequest
         return new TelegramRequest($this, $this->token, $method, $args);
     }
 
+    /**
+     * Send api request
+     *
+     * @param string $method
+     * @param array  $args
+     * @return mixed
+     */
     public function requestApi(string $method, array $args)
     {
         return $this->newRequest($method, $args)->request();
     }
 
+    /**
+     * Send mmb request
+     *
+     * @param string $method
+     * @param array  $args
+     * @return mixed
+     */
     public function request(string $method, array $args)
     {
         $lowerMethod = strtolower($method);

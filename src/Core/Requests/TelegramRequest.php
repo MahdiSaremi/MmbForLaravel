@@ -12,15 +12,16 @@ class TelegramRequest extends RequestApi
 
     protected function execute()
     {
-        dd($this->getFinalArgs());
         $client = $this->getClient();
         $response = $client->post(
-            "https://api.telegram.org/bot{$this->token}/{$this->method}", $this->getOptions(
-            [
-                'query'       => $this->getFinalArgs(),
-                'http_errors' => false,
-            ]
-        )
+            "https://api.telegram.org/bot{$this->token}/{$this->method}",
+            $this->getOptions(
+                [
+                    'query'       => $this->getFinalArgs(),
+                    'http_errors' => false,
+                    'proxy' => '192.168.30.126:10809',
+                ]
+            )
         );
 
         $contents = $response->getBody()->getContents();
@@ -43,7 +44,7 @@ class TelegramRequest extends RequestApi
 
     public function getFinalArgs()
     {
-        $args = $this->args;
+        $args = $this->parsedArgs();
         foreach($args as $name => $value)
         {
             if(is_array($value))

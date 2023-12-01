@@ -6,7 +6,6 @@ use Mmb\Laravel\Action\Memory\Attributes\StepHandlerAlias as Alias;
 use Mmb\Laravel\Action\Memory\Attributes\StepHandlerSafeClass as SafeClass;
 use Mmb\Laravel\Action\Memory\Attributes\StepHandlerShortClass as ShortClass;
 use Mmb\Laravel\Action\Memory\StepHandler;
-use Mmb\Laravel\Action\Memory\StepMemory;
 use Mmb\Laravel\Core\Updates\Update;
 
 class NextStepHandler extends StepHandler
@@ -31,6 +30,8 @@ class NextStepHandler extends StepHandler
             $this->action = $action;
             $this->method = $method;
         }
+
+        return $this;
     }
 
     public function handle(Update $update)
@@ -38,9 +39,7 @@ class NextStepHandler extends StepHandler
         if(class_exists($this->action) && method_exists($this->action, 'make'))
         {
             $action = $this->action::make($update);
-
-            // if($action)
-            // TODO
+            $action->invoke($this->method);
         }
     }
 
